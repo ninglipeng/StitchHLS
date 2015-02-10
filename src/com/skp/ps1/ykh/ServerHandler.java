@@ -67,19 +67,17 @@ public class ServerHandler extends SimpleChannelInboundHandler<FullHttpRequest> 
 		ChannelFuture sendFileFuture;
 		ChannelFuture lastContentFuture;
 		
-		sendFileFuture = ctx.write(new DefaultFileRegion(randomAccessFile.getChannel(), 0,fileLength), ctx.newProgressivePromise());
+		sendFileFuture = ctx.write(new DefaultFileRegion(randomAccessFile.getChannel(), 0,fileLength)
+									, ctx.newProgressivePromise());
 		sendFileFuture.addListener(new ChannelProgressiveFutureListener() {
 			@Override
 			public void operationProgressed(ChannelProgressiveFuture future,long progress, long total) {
 				if (total < 0) {
-					System.err.println(future.channel()
-							+ " Transfer progress: " + progress);
+					System.err.println(future.channel()+" Transfer progress: " + progress);
 				} else {
-					System.err.println(future.channel()
-							+ " Transfer progress: " + progress + " / " + total);
+					System.err.println(future.channel()+" Transfer progress: " + progress + " / " + total);
 				}
 			}
-
 			@Override
 			public void operationComplete(ChannelProgressiveFuture future) {
 				System.err.println(future.channel() + " Transfer complete.");
